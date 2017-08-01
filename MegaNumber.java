@@ -12,7 +12,8 @@ public class MegaNumber {
       // reduce array size (two indicines contain one value
       //  in the string if negative)
       number = new ArrayList<Integer>();
-      if(num.charAt(i) == '-'){
+
+      if(num.charAt(0) == '-'){
          number.add(Integer.parseInt(num.substring(0,2)));
          //reduce where we are looking
          start = 2;
@@ -21,7 +22,12 @@ public class MegaNumber {
       //fill number array with individual integers.
       for(int i=start; i < num.length();i++){
          number.add(Integer.parseInt(num.substring(i,i+1)));
+         System.out.println(number.get(i));
       }   
+   }
+
+   public MegaNumber(ArrayList<Integer> _number){
+      number = _number;
    }
 
    public MegaNumber(Integer num){
@@ -43,7 +49,25 @@ public class MegaNumber {
    }
 
    public MegaNumber halve(){
-      return null;
+      ArrayList<Integer> result = new ArrayList<Integer>();
+      int num;
+      //j is the index we're at
+      int carry = 0, j=0;
+      float temp;
+      for(int i = 0;i<number.size();i++){
+         num = number.get(i);
+         temp = ((float) num) / 2.0f;
+         if(temp < 1.0 && carry == 0){
+            carry = (int) (temp*10);
+         } else {
+            result.add(j, (carry + ((int) temp)));
+            temp = (temp - (num/2));
+            carry = (int) (temp*10);
+            j++;
+         }
+      }
+      
+      return new MegaNumber(result);
    }
 
    /**
@@ -70,7 +94,7 @@ public class MegaNumber {
 
    public String toString(){
       String out = "";
-      for(Integer i : number){
+      for(int i =0;i<number.size();i++){
          out += number.get(i);
       }
       return out;

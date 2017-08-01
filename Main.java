@@ -1,4 +1,7 @@
 import java.util.Scanner;
+import java.util.ArrayList;
+
+
 
 public class Main {
 
@@ -12,31 +15,47 @@ public class Main {
       
       while(scan.hasNextLine()){
          ret = scan.nextLine();
-         if(ret.split(" ").length != 3){
-            System.out.println("Syntax error");
-            continue;
-         }
-         
          input = ret.split(" ");
-         //if input[0] is num
-         if(!checkOperation(input[1]) {
+         /*if(input.length != 3){
+            System.out.println("Syntax error");
+            continue;
+         }*/
+
+         System.out.println(input[0] + ":" + input[1] + ":" + input[2]);
+         
+         if(!checkOperation(input[1])) {
             System.out.println("Syntax error");
             continue;
          }
 
-         //if input[2] is num
-         
          scenarios.add(input);
-
       }
 
       //note singular and plural
       for(String[] scenario : scenarios){
-      
+         MegaNumber n1 = new MegaNumber(scenario[0]);
+         MegaNumber n2 = new MegaNumber(scenario[2]);
+         operate(n1,n2,scenario[1]);
       }
-
-
    }
+
+   public static MegaNumber operate(MegaNumber n1, 
+      MegaNumber n2, String op){
+         
+      switch(op) {
+         case "h" :
+            System.out.println(n1.toString());
+            n1 = n1.halve();
+            System.out.println(n1.toString());
+            break;
+         default:
+            System.out.println("Unsupported");
+            break;
+
+      }
+      return null;
+   }
+
 
       public static boolean checkOperation(String s){
          switch(s){
@@ -49,20 +68,21 @@ public class Main {
             case ">" :
             case "=" :
                return true;
-               break;
-            case default :
+               
+            default :
                return false;
+              
          }
 
 
       }
 
 
-   }
-
-
-
 }
+
+
+
+
 
 
 

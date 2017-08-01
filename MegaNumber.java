@@ -76,11 +76,47 @@ public class MegaNumber {
     *  1 if o1 GT o2
     */
    public int compareTo(MegaNumber o2){
-      return 0;
+      ArrayList<Integer> n1 = this.getNumber();
+      ArrayList<Integer> n2 = o2.getNumber();
+      
+      //easy way to compare sizes is size of the number
+      // i.e. how many digits
+      if(n1.size() < n2.size()){
+         return -1;
+      }
+      if(n1.size() > n2.size()){
+         return 1;
+      }
+
+      //therefore must be equal in size
+      for(int i=0;i<n1.size();i++){
+         if(n1.get(i) < n2.get(i)){
+            return -1;
+         } else if (n1.get(i) > n2.get(i)){
+            return 1;
+         }
+      }
+      //all numbers are the same, therefore equal
+      return 0;  
    }
 
    public MegaNumber multipliedBy(MegaNumber o2){
-      return null;
+      ArrayList<Integer> result = new ArrayList<Integer>();
+      ArrayList<Integer> n1 = this.getNumber();
+      ArrayList<Integer> n2 = o2.getNumber();
+
+      for(int i=0;i<n1.size();i++){
+
+         for(int j=0;j<n2.size();j++){
+         
+         }
+
+      }
+
+
+      return result;
+
+
    }
 
    public MegaNumber dividedBy(MegaNumber o2){
@@ -91,6 +127,9 @@ public class MegaNumber {
       return null;
    }
 
+   public ArrayList<Integer> getNumber(){
+      return number;
+   }
 
    public String toString(){
       String out = "";

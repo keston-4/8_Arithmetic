@@ -44,10 +44,11 @@ public class Main {
          
       switch(op) {
          case "h" :
-            System.out.println(n1.toString());
-            n1 = n1.halve();
-            System.out.println(n1.toString());
+            System.out.println(n1.halve().toString());
+            System.out.println(n2.halve().toString());
             break;
+         case "=" :
+            System.out.println(n1.compareTo(n2));
          default:
             System.out.println("Unsupported");
             break;

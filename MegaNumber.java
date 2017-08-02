@@ -12,6 +12,9 @@ public class MegaNumber {
       // reduce array size (two indicines contain one value
       //  in the string if negative)
       number = new ArrayList<Integer>();
+      if(num.length() == 0){
+         return;
+      }
 
       if(num.charAt(0) == '-'){
          number.add(Integer.parseInt(num.substring(0,2)));
@@ -74,8 +77,7 @@ public class MegaNumber {
          }
          result = n + result;
          l1--;
-         l2--;
-         
+         l2--;         
       }     
 
       for(int i=l1; l1 >= 0; l1--){
@@ -101,7 +103,6 @@ public class MegaNumber {
          result = carry + result;
       }
 
-      System.out.println("::" + result);
       return new MegaNumber(result);
 
    }
@@ -124,7 +125,6 @@ public class MegaNumber {
             j++;
          }
       }
-      
       return new MegaNumber(result);
    }
 
@@ -158,23 +158,32 @@ public class MegaNumber {
       return 0;  
    }
 
+   /**
+    * Essentially multiplication is performed just as you would
+    *  in primary school, times the first num in list 1, by the first num
+    *  in list 2, then the first num is list 1 by the second
+    *  num in list 2, and so on. When you reach the end of a 
+    *  list, add it to a total sum (in this case 'output')
+    */
    public MegaNumber multipliedBy(MegaNumber o2){
-      ArrayList<Integer> result = new ArrayList<Integer>();
       ArrayList<Integer> n1 = this.getNumber();
       ArrayList<Integer> n2 = o2.getNumber();
-
-      for(int i=0;i<n1.size();i++){
-
-         for(int j=0;j<n2.size();j++){
-         
+      MegaNumber output = new MegaNumber(0);
+      String result = "";
+      int n = 0;
+      int exp = 0;
+      //for every number in n1
+      System.out.println(this);
+      System.out.println(o2);
+      for(int i=n1.size()-1;i>=0;i--){
+         //multiply it by every number in n2
+         for(int j=n2.size()-1;j>=0;j--){
+            exp = ((n1.size()-1)-i) + ((n2.size()-1)-j);
+            n = (n1.get(i) * n2.get(j))*((int)(Math.pow(10,exp)));
+            output = output.add(new MegaNumber(n + result));
          }
-
       }
-
-
-      return null;
-
-
+      return output;
    }
 
    public MegaNumber dividedBy(MegaNumber o2){

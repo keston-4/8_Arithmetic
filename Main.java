@@ -21,7 +21,7 @@ public class Main {
             continue;
          }*/
 
-         System.out.println(input[0] + ":" + input[1] + ":" + input[2]);
+         //System.out.println(input[0] + ":" + input[1] + ":" + input[2]);
          
          if(!checkOperation(input[1])) {
             System.out.println("Syntax error");
@@ -49,6 +49,10 @@ public class Main {
             break;
          case "=" :
             System.out.println(n1.compareTo(n2));
+            break;
+         case "+" :
+            System.out.println(n1.add(n2));
+            break;
          default:
             System.out.println("Unsupported");
             break;

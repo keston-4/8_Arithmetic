@@ -56,6 +56,10 @@ public class Main {
          case "*" :
             System.out.println("Result : "+n1.multipliedBy(n2));
             break;
+
+         case "-" :
+            System.out.println("Result :"+n1.minus(n2));
+            break;
          default:
             System.out.println("Unsupported");
             break;

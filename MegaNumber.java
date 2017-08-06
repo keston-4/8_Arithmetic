@@ -17,21 +17,25 @@ public class MegaNumber {
       }
 
       if(num.charAt(0) == '-'){
+         
          number.add(Integer.parseInt(num.substring(0,2)));
          //reduce where we are looking
          start = 2;
-      } else if(num.charAt(0) == '0') {
-         start = 1;
-         for(int i=1;i<num.length();i++){
-            if(num.charAt(i) == '0'){
-               start++;
-            } else {
-               break;
-            }
+      }
 
+      
+      for(int i=0;i<num.length();i++){
+         if(num.charAt(i) == '0'){
+            start++;
+         } else {
+            break;
          }
-      } 
-
+      }
+      //if the entire number is zero
+      if(start == num.length()){
+         number.add(new Integer(0));
+         return;
+      }
       
       //fill number array with individual integers.
       for(int i=start; i < num.length();i++){
@@ -55,13 +59,56 @@ public class MegaNumber {
    //operations
    
    public MegaNumber minus(MegaNumber o2){
-      return null;
+      ArrayList<Integer> n1 = this.getNumber();
+      ArrayList<Integer> n2 = o2.getNumber();
+      //if one is negative and the other is positive then add
+      String result = "";
+      //MINUS N2 FROM N1 (N1 - N2)
+      int l1 = n1.size()-1;
+      int l2 = n2.size()-1;
+      int n = 0, postremain = 0, inremain;
+      while(l1 >= 0 && l2>= 0){
+         //System.out.println(n1.get(l1) + " - " + n2.get(l2));
+         n = n1.get(l1) - n2.get(l2);
+         
+         if(n < 0 && (l1-1) >= 0){
+            n1.set(l1-1,(n1.get(l1-1)-1));
+            postremain = 10 + n; //remember n is negative so add
+            
+            n = postremain;
+
+         }
+
+         //n = Math.abs(n);
+         
+         result = n + result;
+         l2--;
+         l1--;
+
+      }
+      //System.out.println("^^^" + result);
+      for(int i=l1;l1>=0;l1--){
+         result = n1.get(l1) + result;
+      }
+      for(int i=l2;l2>=0;l2--){
+         result = n2.get(l2) + result;
+      }
+      return new MegaNumber(result);
+
+
    } 
 
    public MegaNumber add(MegaNumber o2){
       ArrayList<Integer> n1 = this.getNumber();
       ArrayList<Integer> n2 = o2.getNumber();
       String result = "";
+      //insert code for negative
+      // if leading of one is negative, and positive for other
+      //  perform minus operation
+      
+      
+      //  if both are negative or positive, then perform addition
+      
       int l1 = n1.size()-1;
       int l2 = n2.size()-1;
       int n = 0, carry = 0;
@@ -179,15 +226,47 @@ public class MegaNumber {
          //multiply it by every number in n2
          for(int j=n2.size()-1;j>=0;j--){
             exp = ((n1.size()-1)-i) + ((n2.size()-1)-j);
-            n = (n1.get(i) * n2.get(j))*((int)(Math.pow(10,exp)));
-            output = output.add(new MegaNumber(n + result));
+            result = (""+(n1.get(i) * n2.get(j))) + getZeroes(exp);
+            output = output.add(new MegaNumber(result));
          }
       }
       return output;
    }
 
+   public String getZeroes(int num){
+      int count = 0;
+      String out = "";
+      while(count < num){
+         out += "0";
+         count++;
+      }
+      return out;
+   }
+
    public MegaNumber dividedBy(MegaNumber o2){
+      ArrayList<Integer> n1 = this.getNumber();
+      ArrayList<Integer> n2 = this.getNumber();
+      MegaNumber t1 = new MegaNumber(0);
+      MegaNumber t2 = new MegaNumber(0);
+      if(n2.size() > n1.size()){
+         return new MegaNumber(0);
+      }
+
+      if(n2.size() == n1.size()){
+         return new MegaNumber((n1.get(0) / n2.get(0)));
+      }
+      int in = 0;
+      // therefore n1 > n2
+      for(int i=n1.size();i>=0;i++){
+         if(i==n2.size()){
+         
+         }
+
+
+      }
       return null;
+
+
    }
 
    public MegaNumber greatestCommonDivisor(MegaNumber o2){

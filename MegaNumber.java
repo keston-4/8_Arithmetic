@@ -3,11 +3,11 @@ import java.util.ArrayList;
 
 public class MegaNumber {
    
-   //private int[] number;
    private ArrayList<Integer> number;
 
    public MegaNumber(String num){
       int start =0;
+ //     System.out.println("::" + num);
       //negative numbers
       // reduce array size (two indicines contain one value
       //  in the string if negative)
@@ -19,10 +19,15 @@ public class MegaNumber {
       if(num.charAt(0) == '-'){
          
          number.add(Integer.parseInt(num.substring(0,2)));
+         
          //reduce where we are looking
          start = 2;
+         if(start == num.length()){
+            return;
+         }
       }
-
+      
+      
       
       for(int i=0;i<num.length();i++){
          if(num.charAt(i) == '0'){
@@ -31,12 +36,13 @@ public class MegaNumber {
             break;
          }
       }
+
       //if the entire number is zero
       if(start == num.length()){
          number.add(new Integer(0));
          return;
       }
-      
+ //     System.out.println(num);
       //fill number array with individual integers.
       for(int i=start; i < num.length();i++){
          number.add(Integer.parseInt(num.substring(i,i+1)));
@@ -62,6 +68,18 @@ public class MegaNumber {
       ArrayList<Integer> n1 = this.getNumber();
       ArrayList<Integer> n2 = o2.getNumber();
       //if one is negative and the other is positive then add
+
+      // x - -x
+      if(n2.get(0) < 0 && n1.get(0) > 0){
+         return this.add(o2);
+      }
+      
+      //-x - x
+      if(n1.get(0) < 0 && n2.get(0) > 0){
+         n2.set(0, 0-(n2.get(0)));
+         return this.add(new MegaNumber(n2));
+      }
+
       String result = "";
       //MINUS N2 FROM N1 (N1 - N2)
       int l1 = n1.size()-1;
@@ -104,18 +122,14 @@ public class MegaNumber {
       String result = "";
       //insert code for negative
       // if leading of one is negative, and positive for other
-      //  perform minus operation
-      
-      
-      //  if both are negative or positive, then perform addition
-      
+      //  perform minus operation      
       int l1 = n1.size()-1;
       int l2 = n2.size()-1;
       int n = 0, carry = 0;
       while(l1 >= 0 && l2>=0){
          n = n1.get(l1) + n2.get(l2);
-         System.out.println(n1.get(l1) + " + " + n2.get(l2));
-         System.out.println("result: "+n);
+         //System.out.println(n1.get(l1) + " + " + n2.get(l2));
+         //System.out.println("result: "+n);
          n = carry + n;
          carry = 0;
          if(n >= 10){
@@ -245,26 +259,45 @@ public class MegaNumber {
 
    public MegaNumber dividedBy(MegaNumber o2){
       ArrayList<Integer> n1 = this.getNumber();
-      ArrayList<Integer> n2 = this.getNumber();
+      ArrayList<Integer> n2 = o2.getNumber();
+      ArrayList<Integer> n3;
       MegaNumber t1 = new MegaNumber(0);
-      MegaNumber t2 = new MegaNumber(0);
-      if(n2.size() > n1.size()){
+      //MegaNumber t2 = new MegaNumber(0);
+      boolean negn1 = false, negn2 = false;
+      if((n1.size() < n2.size())){
          return new MegaNumber(0);
       }
-
-      if(n2.size() == n1.size()){
-         return new MegaNumber((n1.get(0) / n2.get(0)));
+      if(n1.get(0) < 0){
+         n1.set(0, Math.abs(n1.get(0)));
+         this.setNumber(n1);     
+         negn1 = true;
       }
-      int in = 0;
-      // therefore n1 > n2
-      for(int i=n1.size();i>=0;i++){
-         if(i==n2.size()){
-         
-         }
 
-
+      if(n2.get(0) < 0){
+         n2.set(0, Math.abs(n2.get(0)));
+         o2.setNumber(n2);
+         negn2 = true;
       }
-      return null;
+      
+      
+
+      int n = 0;
+      t1 = this.minus(o2);
+      if(t1.getNumber().get(0) < 0){
+          return new MegaNumber(0);
+      }
+      n++;
+      while(t1.getNumber().get(0) > 0){
+         n++;
+         t1 = t1.minus(o2);
+      }
+      //System.out.println(">>> "+n);     
+      if(!(negn1 == negn2)){
+         //System.out.print(":: "+(0-n)+" :: ");
+         return new MegaNumber((0-n));
+      } 
+      //System.out.print(":: "+n+" :: ");
+      return new MegaNumber(n);
 
 
    }
@@ -275,6 +308,10 @@ public class MegaNumber {
 
    public ArrayList<Integer> getNumber(){
       return number;
+   }
+
+   public void setNumber(ArrayList<Integer> _number){
+      number = _number;
    }
 
    public String toString(){

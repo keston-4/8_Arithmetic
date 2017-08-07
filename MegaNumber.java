@@ -1,7 +1,7 @@
 import java.util.ArrayList;
+import java.util.TreeSet;
 
-
-public class MegaNumber {
+public class MegaNumber implements Comparable<MegaNumber>{
    
    private ArrayList<Integer> number;
 
@@ -67,10 +67,18 @@ public class MegaNumber {
    public MegaNumber minus(MegaNumber o2){
       ArrayList<Integer> n1 = this.getNumber();
       ArrayList<Integer> n2 = o2.getNumber();
-      //if one is negative and the other is positive then add
+      ArrayList<Integer> tn;
+      MegaNumber t1;
+      if(this.compareTo(o2) < 0){
+         t1 = o2.minus(this);
+         tn = t1.getNumber();
+         tn.set(0, 0-tn.get(0));
+         return new MegaNumber(tn);
+      }
 
       // x - -x
       if(n2.get(0) < 0 && n1.get(0) > 0){
+         n2.set(0, Math.abs(n2.get(0)));
          return this.add(o2);
       }
       
@@ -81,30 +89,38 @@ public class MegaNumber {
       }
 
       String result = "";
-      //MINUS N2 FROM N1 (N1 - N2)
+      
       int l1 = n1.size()-1;
       int l2 = n2.size()-1;
+      int j = 1;
       int n = 0, postremain = 0, inremain;
       while(l1 >= 0 && l2>= 0){
-         //System.out.println(n1.get(l1) + " - " + n2.get(l2));
          n = n1.get(l1) - n2.get(l2);
          
-         if(n < 0 && (l1-1) >= 0){
-            n1.set(l1-1,(n1.get(l1-1)-1));
-            postremain = 10 + n; //remember n is negative so add
-            
-            n = postremain;
+         if(n < 0) {
+            //get index where there is a number we can remove from
+            while((l1-j) >= 0 && n1.get(l1-j) == 0 ){
+               j++;
+            }
+            if((l1-j) < 0){
+               //???
+               break;
+            }
 
-         }
-
-         //n = Math.abs(n);
-         
+            n1.set(l1-j, n1.get(l1-j)-1);
+            j--;
+            while(j > 0){
+               n1.set(l1-j, 9);
+               j--;
+            }
+            //n1.set(l1-j, (n1.get(l1-j)-1));
+            n = 10 - Math.abs(n);
+         } 
          result = n + result;
          l2--;
          l1--;
-
       }
-      //System.out.println("^^^" + result);
+      
       for(int i=l1;l1>=0;l1--){
          result = n1.get(l1) + result;
       }
@@ -112,24 +128,52 @@ public class MegaNumber {
          result = n2.get(l2) + result;
       }
       return new MegaNumber(result);
-
-
    } 
 
    public MegaNumber add(MegaNumber o2){
-      ArrayList<Integer> n1 = this.getNumber();
-      ArrayList<Integer> n2 = o2.getNumber();
+      ArrayList<Integer> n1 = new ArrayList<Integer>(this.getNumber());
+      ArrayList<Integer> n2 = new ArrayList<Integer>(o2.getNumber());
+      ArrayList<Integer> tn;
+      MegaNumber t1 = new MegaNumber(n1);
+      MegaNumber t2 = new MegaNumber(n2);
       String result = "";
-      //insert code for negative
-      // if leading of one is negative, and positive for other
-      //  perform minus operation      
+      
       int l1 = n1.size()-1;
       int l2 = n2.size()-1;
       int n = 0, carry = 0;
+      boolean negn1 = false, negn2 = false;
+
+      if(n1.get(0) < 0 ){
+         n1.set(0, Math.abs(n1.get(0)));
+         t1.setNumber(n1);
+         negn1 = true;
+      }
+      if(n2.get(0) < 0){
+         n2.set(0, Math.abs(n2.get(0)));
+         t2.setNumber(n2);
+         negn2 = true;
+      }
+      
+      if(!(negn1 == negn2)){
+         
+         //-x + y >> y - x
+         if(negn1){
+            t1 = t2.minus(t1);
+            tn = t1.getNumber();
+            tn.set(0, (tn.get(0)));
+            return new MegaNumber(tn);
+         //x + -y >> x - y
+         } else {
+            /*t1 = this.minus(o2);
+            tn = t1.getNumber();
+            tn.set(0, (tn.get(0)));
+            return new MegaNumber(tn);*/
+            return t1.minus(t2);
+         } 
+      }
+
       while(l1 >= 0 && l2>=0){
          n = n1.get(l1) + n2.get(l2);
-         //System.out.println(n1.get(l1) + " + " + n2.get(l2));
-         //System.out.println("result: "+n);
          n = carry + n;
          carry = 0;
          if(n >= 10){
@@ -162,6 +206,9 @@ public class MegaNumber {
 
       if(carry > 0){
          result = carry + result;
+      }
+      if(negn1){
+         return new MegaNumber("-"+result);
       }
 
       return new MegaNumber(result);
@@ -227,15 +274,28 @@ public class MegaNumber {
     *  list, add it to a total sum (in this case 'output')
     */
    public MegaNumber multipliedBy(MegaNumber o2){
-      ArrayList<Integer> n1 = this.getNumber();
-      ArrayList<Integer> n2 = o2.getNumber();
+      ArrayList<Integer> n1 = new ArrayList<Integer>(this.getNumber());
+      ArrayList<Integer> n2 = new ArrayList<Integer>(o2.getNumber());
+      //MegaNumber t1 = new MegaNumber(n1);
+      //MegaNumber t2 = new MegaNumber(n2);
+
       MegaNumber output = new MegaNumber(0);
+      boolean negn1 = false, negn2 = false;
       String result = "";
       int n = 0;
       int exp = 0;
+      
+      if(n1.get(0) < 0){
+         n1.set(0, Math.abs(n1.get(0)));
+         negn1 = true;
+      }
+      
+      if(n2.get(0) < 0){
+         n2.set(0, Math.abs(n2.get(0)));
+         negn2 = true;
+      }
+      
       //for every number in n1
-      System.out.println(this);
-      System.out.println(o2);
       for(int i=n1.size()-1;i>=0;i--){
          //multiply it by every number in n2
          for(int j=n2.size()-1;j>=0;j--){
@@ -243,6 +303,11 @@ public class MegaNumber {
             result = (""+(n1.get(i) * n2.get(j))) + getZeroes(exp);
             output = output.add(new MegaNumber(result));
          }
+      }
+      if(!(negn1==negn2)){
+         n1 = output.getNumber();
+         n1.set(0, 0-n1.get(0));
+         return new MegaNumber(n1);
       }
       return output;
    }
@@ -258,52 +323,77 @@ public class MegaNumber {
    }
 
    public MegaNumber dividedBy(MegaNumber o2){
-      ArrayList<Integer> n1 = this.getNumber();
-      ArrayList<Integer> n2 = o2.getNumber();
-      ArrayList<Integer> n3;
-      MegaNumber t1 = new MegaNumber(0);
-      //MegaNumber t2 = new MegaNumber(0);
+      ArrayList<Integer> n1 = new ArrayList<Integer>(this.getNumber());
+      ArrayList<Integer> n2 = new ArrayList<Integer>(o2.getNumber());
+      MegaNumber t1 = new MegaNumber(n1);
+      MegaNumber t2 = new MegaNumber(n2);
+      
       boolean negn1 = false, negn2 = false;
       if((n1.size() < n2.size())){
          return new MegaNumber(0);
       }
       if(n1.get(0) < 0){
          n1.set(0, Math.abs(n1.get(0)));
-         this.setNumber(n1);     
+         t1.setNumber(n1);     
          negn1 = true;
       }
 
       if(n2.get(0) < 0){
          n2.set(0, Math.abs(n2.get(0)));
-         o2.setNumber(n2);
+         t2.setNumber(n2);
          negn2 = true;
       }
       
-      
-
       int n = 0;
-      t1 = this.minus(o2);
+      t1 = new MegaNumber(n1);
+      t1 = t1.minus(t2);
+
       if(t1.getNumber().get(0) < 0){
           return new MegaNumber(0);
       }
+
       n++;
-      while(t1.getNumber().get(0) > 0){
+      while(t1.compareTo(t2) >= 0){
          n++;
-         t1 = t1.minus(o2);
+         t1 = t1.minus(t2);
       }
-      //System.out.println(">>> "+n);     
+      
       if(!(negn1 == negn2)){
-         //System.out.print(":: "+(0-n)+" :: ");
          return new MegaNumber((0-n));
       } 
-      //System.out.print(":: "+n+" :: ");
       return new MegaNumber(n);
 
 
    }
 
-   public MegaNumber greatestCommonDivisor(MegaNumber o2){
-      return null;
+   public MegaNumber gcd(MegaNumber o2){
+      MegaNumber gcd = new MegaNumber(1);
+      TreeSet<MegaNumber> set1 = new TreeSet<MegaNumber>();
+      TreeSet<MegaNumber> set2 = new TreeSet<MegaNumber>();
+      MegaNumber num = new MegaNumber(4);
+      
+      while(num.compareTo(o2) <= 0 && num.compareTo(this) <= 0){
+         set1.add(this.dividedBy(num));
+         set2.add(o2.dividedBy(num));
+         num = num.add(new MegaNumber(1));
+      }
+      
+      System.out.println("Set 1: "+set1);
+      System.out.println("Set 2: "+set2);
+      for(MegaNumber n1 : set1){
+        for(MegaNumber n2 : set2){
+            if(n1.compareTo(n2) == 0){
+               if(n1.compareTo(gcd) > 0){
+                  gcd = n1;
+               }
+            }
+        }
+      }
+
+      return gcd;
+
+
+
    }
 
    public ArrayList<Integer> getNumber(){

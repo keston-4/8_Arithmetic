@@ -35,7 +35,7 @@ public class Main {
       for(String[] scenario : scenarios){
          MegaNumber n1 = new MegaNumber(scenario[0]);
          MegaNumber n2 = new MegaNumber(scenario[2]);
-         System.out.print(n1 + " " + scenario[1] + " " + n2 + " = ");
+         System.out.println(n1 + " " + scenario[1] + " " + n2);
          operate(n1,n2,scenario[1]);
       }
    }
@@ -49,21 +49,26 @@ public class Main {
             System.out.println(n2.halve().toString());
             break;
          case "=" :
-            System.out.print(n1.compareTo(n2)+"\n");
+            System.out.print("# "+n1.compareTo(n2)+"\n\n");
             break;
          case "+" :
-            System.out.print(n1.add(n2)+"\n");
+            System.out.print("# "+n1.add(n2)+"\n\n");
             break;
          case "*" :
-            System.out.print(n1.multipliedBy(n2)+"\n");
+            System.out.print("# "+n1.multipliedBy(n2)+"\n\n");
             break;
 
          case "-" :
-            System.out.print(n1.minus(n2)+"\n");
+            System.out.print("# "+n1.minus(n2)+"\n\n");
             break;
          case "/" :
-            System.out.print(n1.dividedBy(n2)+"\n");
+            System.out.print("# "+n1.dividedBy(n2)+"\n\n");
             break;
+
+         case "gcd" :
+            System.out.print("# "+n1.gcd(n2)+"\n\n");
+            break;
+
          default:
             System.out.println("Unsupported");
             break;

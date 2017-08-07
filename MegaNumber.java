@@ -1,9 +1,13 @@
+/* Etude 8 - Arithmetic
+ * Authors: Kurt Weston & James Douglas
+ */
 import java.util.ArrayList;
 import java.util.TreeSet;
 
 public class MegaNumber implements Comparable<MegaNumber>{
    
    private ArrayList<Integer> number;
+   private MegaNumber remainder;
 
    public MegaNumber(String num){
       int start =0;
@@ -327,10 +331,12 @@ public class MegaNumber implements Comparable<MegaNumber>{
       ArrayList<Integer> n2 = new ArrayList<Integer>(o2.getNumber());
       MegaNumber t1 = new MegaNumber(n1);
       MegaNumber t2 = new MegaNumber(n2);
-      
+      MegaNumber out;
       boolean negn1 = false, negn2 = false;
       if((n1.size() < n2.size())){
-         return new MegaNumber(0);
+         out = new MegaNumber(0);
+         out.setRemainder(t1);
+         return out;
       }
       if(n1.get(0) < 0){
          n1.set(0, Math.abs(n1.get(0)));
@@ -349,7 +355,9 @@ public class MegaNumber implements Comparable<MegaNumber>{
       t1 = t1.minus(t2);
 
       if(t1.getNumber().get(0) < 0){
-          return new MegaNumber(0);
+         out = new MegaNumber(0);
+         out.setRemainder(this);
+         return out;
       }
 
       n++;
@@ -358,10 +366,16 @@ public class MegaNumber implements Comparable<MegaNumber>{
          t1 = t1.minus(t2);
       }
       
+      
+
       if(!(negn1 == negn2)){
-         return new MegaNumber((0-n));
-      } 
-      return new MegaNumber(n);
+         out = new MegaNumber(0-n);
+         out.setRemainder(t1);
+         return out;
+      }
+      out = new MegaNumber(n);
+      out.setRemainder(t1);
+      return out;
 
 
    }
@@ -397,6 +411,14 @@ public class MegaNumber implements Comparable<MegaNumber>{
 
    public void setNumber(ArrayList<Integer> _number){
       number = _number;
+   }
+
+   public void setRemainder(MegaNumber n){
+      remainder = n;
+   }
+
+   public MegaNumber getRemainder(){
+      return remainder;
    }
 
    public String toString(){

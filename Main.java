@@ -1,3 +1,8 @@
+/* Etude 8 - Arithmetic 
+ * Authors: Kurt Weston & James Douglas
+ */
+
+
 import java.util.Scanner;
 import java.util.ArrayList;
 
@@ -34,12 +39,12 @@ public class Main {
 
    public static MegaNumber operate(MegaNumber n1, 
       MegaNumber n2, String op){
-         
+      MegaNumber t;
       switch(op) {
-         case "h" :
+         /*case "h" :
             System.out.println(n1.halve().toString());
             System.out.println(n2.halve().toString());
-            break;
+            break;*/
          case "=" :
             System.out.println("# "+(n1.compareTo(n2) == 0) +"\n");
             break;
@@ -60,7 +65,8 @@ public class Main {
             System.out.println("# "+n1.minus(n2)+"\n");
             break;
          case "/" :
-            System.out.println("# "+n1.dividedBy(n2)+"\n");
+            t = n1.dividedBy(n2);
+            System.out.println("# "+t+" "+t.getRemainder()+"\n");
             break;
 
          case "gcd" :

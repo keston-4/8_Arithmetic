@@ -370,16 +370,14 @@ public class MegaNumber implements Comparable<MegaNumber>{
       MegaNumber gcd = new MegaNumber(1);
       TreeSet<MegaNumber> set1 = new TreeSet<MegaNumber>();
       TreeSet<MegaNumber> set2 = new TreeSet<MegaNumber>();
-      MegaNumber num = new MegaNumber(4);
-      
+      MegaNumber num = new MegaNumber(1);
+
       while(num.compareTo(o2) <= 0 && num.compareTo(this) <= 0){
          set1.add(this.dividedBy(num));
          set2.add(o2.dividedBy(num));
          num = num.add(new MegaNumber(1));
       }
       
-      System.out.println("Set 1: "+set1);
-      System.out.println("Set 2: "+set2);
       for(MegaNumber n1 : set1){
         for(MegaNumber n2 : set2){
             if(n1.compareTo(n2) == 0){
@@ -387,13 +385,10 @@ public class MegaNumber implements Comparable<MegaNumber>{
                   gcd = n1;
                }
             }
-        }
+         }
       }
 
       return gcd;
-
-
-
    }
 
    public ArrayList<Integer> getNumber(){

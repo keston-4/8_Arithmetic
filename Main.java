@@ -11,33 +11,25 @@ public class Main {
       Scanner scan = new Scanner(System.in);
       String ret = "";
       String[] input = new String[3];
-      ArrayList<String[]> scenarios = new ArrayList<String[]>();
       
       while(scan.hasNextLine()){
-         ret = scan.nextLine();
-         input = ret.split(" ");
-         /*if(input.length != 3){
-            System.out.println("Syntax error");
-            continue;
-         }*/
 
-         //System.out.println(input[0] + ":" + input[1] + ":" + input[2]);
-         
-         if(!checkOperation(input[1])) {
-            System.out.println("Syntax error");
+         ret = scan.nextLine();
+         if(ret.isEmpty() || ret.charAt(0) == '#'){
             continue;
          }
-
-         scenarios.add(input);
+         System.out.println(ret);
+         input = ret.split(" ");
+         if(input.length != 3 || !checkOperation(input[1])){
+            System.out.println("# Syntax error\n");
+            continue;
+         } 
+         
+         MegaNumber n1 = new MegaNumber(input[0]);
+         MegaNumber n2 = new MegaNumber(input[2]);
+         operate(n1,n2,input[1]);
       }
 
-      //note singular and plural
-      for(String[] scenario : scenarios){
-         MegaNumber n1 = new MegaNumber(scenario[0]);
-         MegaNumber n2 = new MegaNumber(scenario[2]);
-         System.out.println(n1 + " " + scenario[1] + " " + n2);
-         operate(n1,n2,scenario[1]);
-      }
    }
 
    public static MegaNumber operate(MegaNumber n1, 
@@ -49,30 +41,35 @@ public class Main {
             System.out.println(n2.halve().toString());
             break;
          case "=" :
-            System.out.print("# "+n1.compareTo(n2)+"\n\n");
+            System.out.println("# "+(n1.compareTo(n2) == 0) +"\n");
+            break;
+         case "<" :
+            System.out.println("# "+(n1.compareTo(n2) == -1) +"\n");
+            break;
+         case ">" :
+            System.out.println("# "+(n1.compareTo(n2) == 1) + "\n");
             break;
          case "+" :
-            System.out.print("# "+n1.add(n2)+"\n\n");
+            System.out.println("# "+n1.add(n2)+"\n");
             break;
          case "*" :
-            System.out.print("# "+n1.multipliedBy(n2)+"\n\n");
+            System.out.println("# "+n1.multipliedBy(n2)+"\n");
             break;
 
          case "-" :
-            System.out.print("# "+n1.minus(n2)+"\n\n");
+            System.out.println("# "+n1.minus(n2)+"\n");
             break;
          case "/" :
-            System.out.print("# "+n1.dividedBy(n2)+"\n\n");
+            System.out.println("# "+n1.dividedBy(n2)+"\n");
             break;
 
          case "gcd" :
-            System.out.print("# "+n1.gcd(n2)+"\n\n");
+            System.out.println("# "+n1.gcd(n2)+"\n");
             break;
 
          default:
             System.out.println("Unsupported");
             break;
-
       }
       return null;
    }

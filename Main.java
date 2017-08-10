@@ -10,8 +10,6 @@ import java.util.ArrayList;
 
 public class Main {
 
-   
-
    public static void main(String[] args){
       Scanner scan = new Scanner(System.in);
       String ret = "";
@@ -41,10 +39,6 @@ public class Main {
       MegaNumber n2, String op){
       MegaNumber t;
       switch(op) {
-         /*case "h" :
-            System.out.println(n1.halve().toString());
-            System.out.println(n2.halve().toString());
-            break;*/
          case "=" :
             System.out.println("# "+(n1.compareTo(n2) == 0) +"\n");
             break;
@@ -81,32 +75,19 @@ public class Main {
    }
 
 
-      public static boolean checkOperation(String s){
-         switch(s){
-            case "+" :
-            case "-" :
-            case "*" :
-            case "/" :
-            case "gcd" :
-            case "<" :
-            case ">" :
-            case "=" :
-               return true;
-               
-            default :
-               return false;
-              
-         }
-
-
+   public static boolean checkOperation(String s){
+      switch(s){
+         case "+" :
+         case "-" :
+         case "*" :
+         case "/" :
+         case "gcd" :
+         case "<" :
+         case ">" :
+         case "=" :
+            return true;
+         default :
+            return false;
       }
-
-
+   }
 }
-
-
-
-
-
-
-

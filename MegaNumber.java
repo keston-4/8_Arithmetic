@@ -11,7 +11,6 @@ public class MegaNumber implements Comparable<MegaNumber>{
 
    public MegaNumber(String num){
       int start =0;
- //     System.out.println("::" + num);
       //negative numbers
       // reduce array size (two indicines contain one value
       //  in the string if negative)
@@ -21,7 +20,6 @@ public class MegaNumber implements Comparable<MegaNumber>{
       }
 
       if(num.charAt(0) == '-'){
-         
          number.add(Integer.parseInt(num.substring(0,2)));
          
          //reduce where we are looking
@@ -30,8 +28,6 @@ public class MegaNumber implements Comparable<MegaNumber>{
             return;
          }
       }
-      
-      
       
       for(int i=0;i<num.length();i++){
          if(num.charAt(i) == '0'){
@@ -46,11 +42,9 @@ public class MegaNumber implements Comparable<MegaNumber>{
          number.add(new Integer(0));
          return;
       }
- //     System.out.println(num);
       //fill number array with individual integers.
       for(int i=start; i < num.length();i++){
          number.add(Integer.parseInt(num.substring(i,i+1)));
-         //System.out.println(number.get(i));
       }   
    }
 
@@ -66,13 +60,13 @@ public class MegaNumber implements Comparable<MegaNumber>{
       this("" + num);
    }
 
-   //operations
-   
    public MegaNumber minus(MegaNumber o2){
-      ArrayList<Integer> n1 = this.getNumber();
-      ArrayList<Integer> n2 = o2.getNumber();
+      ArrayList<Integer> n1 = new ArrayList<Integer>(this.getNumber());
+      ArrayList<Integer> n2 = new ArrayList<Integer>(o2.getNumber());
       ArrayList<Integer> tn;
       MegaNumber t1;
+      MegaNumber t2;
+
       if(this.compareTo(o2) < 0){
          t1 = o2.minus(this);
          tn = t1.getNumber();
@@ -83,7 +77,8 @@ public class MegaNumber implements Comparable<MegaNumber>{
       // x - -x
       if(n2.get(0) < 0 && n1.get(0) > 0){
          n2.set(0, Math.abs(n2.get(0)));
-         return this.add(o2);
+         t2 = new MegaNumber(n2);
+         return this.add(t2);
       }
       
       //-x - x
@@ -93,38 +88,39 @@ public class MegaNumber implements Comparable<MegaNumber>{
       }
 
       String result = "";
-      
       int l1 = n1.size()-1;
       int l2 = n2.size()-1;
       int j = 1;
       int n = 0, postremain = 0, inremain;
+      
       while(l1 >= 0 && l2>= 0){
          n = n1.get(l1) - n2.get(l2);
          
          if(n < 0) {
+            j = 1;
             //get index where there is a number we can remove from
             while((l1-j) >= 0 && n1.get(l1-j) == 0 ){
                j++;
             }
             if((l1-j) < 0){
-               //???
                break;
             }
-
+            
+            //j is an offset!
             n1.set(l1-j, n1.get(l1-j)-1);
             j--;
             while(j > 0){
                n1.set(l1-j, 9);
                j--;
             }
-            //n1.set(l1-j, (n1.get(l1-j)-1));
             n = 10 - Math.abs(n);
          } 
+         n1.set(l1, n);
          result = n + result;
          l2--;
          l1--;
       }
-      
+      //add the remaining n1/n2 values to result
       for(int i=l1;l1>=0;l1--){
          result = n1.get(l1) + result;
       }
@@ -159,7 +155,6 @@ public class MegaNumber implements Comparable<MegaNumber>{
       }
       
       if(!(negn1 == negn2)){
-         
          //-x + y >> y - x
          if(negn1){
             t1 = t2.minus(t1);
@@ -168,10 +163,6 @@ public class MegaNumber implements Comparable<MegaNumber>{
             return new MegaNumber(tn);
          //x + -y >> x - y
          } else {
-            /*t1 = this.minus(o2);
-            tn = t1.getNumber();
-            tn.set(0, (tn.get(0)));
-            return new MegaNumber(tn);*/
             return t1.minus(t2);
          } 
       }
@@ -188,7 +179,6 @@ public class MegaNumber implements Comparable<MegaNumber>{
          l1--;
          l2--;         
       }     
-
       for(int i=l1; l1 >= 0; l1--){
          n = carry + n1.get(l1);
          carry = 0;
@@ -207,22 +197,18 @@ public class MegaNumber implements Comparable<MegaNumber>{
          }
          result = n + result;
       }
-
       if(carry > 0){
          result = carry + result;
       }
       if(negn1){
          return new MegaNumber("-"+result);
       }
-
       return new MegaNumber(result);
-
    }
 
    public MegaNumber halve(){
       ArrayList<Integer> result = new ArrayList<Integer>();
       int num;
-      //j is the index we're at
       int carry = 0, j=0;
       float temp;
       for(int i = 0;i<number.size();i++){
@@ -248,7 +234,6 @@ public class MegaNumber implements Comparable<MegaNumber>{
    public int compareTo(MegaNumber o2){
       ArrayList<Integer> n1 = this.getNumber();
       ArrayList<Integer> n2 = o2.getNumber();
-      
       //easy way to compare sizes is size of the number
       // i.e. how many digits
       if(n1.size() < n2.size()){
@@ -257,7 +242,6 @@ public class MegaNumber implements Comparable<MegaNumber>{
       if(n1.size() > n2.size()){
          return 1;
       }
-
       //therefore must be equal in size
       for(int i=0;i<n1.size();i++){
          if(n1.get(i) < n2.get(i)){
@@ -280,8 +264,6 @@ public class MegaNumber implements Comparable<MegaNumber>{
    public MegaNumber multipliedBy(MegaNumber o2){
       ArrayList<Integer> n1 = new ArrayList<Integer>(this.getNumber());
       ArrayList<Integer> n2 = new ArrayList<Integer>(o2.getNumber());
-      //MegaNumber t1 = new MegaNumber(n1);
-      //MegaNumber t2 = new MegaNumber(n2);
 
       MegaNumber output = new MegaNumber(0);
       boolean negn1 = false, negn2 = false;
@@ -326,18 +308,20 @@ public class MegaNumber implements Comparable<MegaNumber>{
       return out;
    }
 
+   /** Simply minus n2 from n1, n2 is scaled by 10^n such that 
+    *  they n1 is slightly bigger than n2, then minus n2 from n1.
+    *
+    */
    public MegaNumber dividedBy(MegaNumber o2){
       ArrayList<Integer> n1 = new ArrayList<Integer>(this.getNumber());
       ArrayList<Integer> n2 = new ArrayList<Integer>(o2.getNumber());
+      ArrayList<Integer> n3 = new ArrayList<Integer>();
       MegaNumber t1 = new MegaNumber(n1);
       MegaNumber t2 = new MegaNumber(n2);
+      MegaNumber res = new MegaNumber(n2);
       MegaNumber out;
       boolean negn1 = false, negn2 = false;
-      if((n1.size() < n2.size())){
-         out = new MegaNumber(0);
-         out.setRemainder(t1);
-         return out;
-      }
+      
       if(n1.get(0) < 0){
          n1.set(0, Math.abs(n1.get(0)));
          t1.setNumber(n1);     
@@ -350,59 +334,72 @@ public class MegaNumber implements Comparable<MegaNumber>{
          negn2 = true;
       }
       
-      int n = 0;
-      t1 = new MegaNumber(n1);
-      t1 = t1.minus(t2);
-
-      if(t1.getNumber().get(0) < 0){
+      if(t1.compareTo(t2) < 0){
          out = new MegaNumber(0);
          out.setRemainder(this);
          return out;
       }
-
-      n++;
+      
+      int n = 0;
+      int j = 0;
+      String v = "";
+      out = new MegaNumber(0);
+      
       while(t1.compareTo(t2) >= 0){
-         n++;
-         t1 = t1.minus(t2);
-      }
-      
-      
+         n = 0;
+         j = 0;
+         res = new MegaNumber(n2);
+         while(res.getNumber().size() < t1.getNumber().size()-1){
+            res = res.multipliedBy(new MegaNumber(10));
+            j++;
+         }
 
-      if(!(negn1 == negn2)){
-         out = new MegaNumber(0-n);
-         out.setRemainder(t1);
-         return out;
+         if((res.multipliedBy(new MegaNumber(10))).compareTo(t1) < 0){
+            res = res.multipliedBy(new MegaNumber(10));
+            j++;
+         }
+         while(t1.compareTo(res) >= 0){
+            n++;
+            t1 = t1.minus(res);
+         }
+      
+         out = out.add(new MegaNumber(n + getZeroes(j)));
       }
-      out = new MegaNumber(n);
+
+      //make negative
+      if(!(negn1 == negn2)){
+         n3 = out.getNumber();
+         n3.set(0, 0-n3.get(0));
+         out = new MegaNumber(n3);
+      }
       out.setRemainder(t1);
       return out;
-
-
    }
 
+   /** Uses Euclidean GCD algorithm to find GCD.
+    *    Essentially, recursively find the gcd of the
+    *    n2 and the remainder from n1/n2.
+    */
    public MegaNumber gcd(MegaNumber o2){
-      MegaNumber gcd = new MegaNumber(1);
-      TreeSet<MegaNumber> set1 = new TreeSet<MegaNumber>();
-      TreeSet<MegaNumber> set2 = new TreeSet<MegaNumber>();
-      MegaNumber num = new MegaNumber(1);
-
-      while(num.compareTo(o2) <= 0 && num.compareTo(this) <= 0){
-         set1.add(this.dividedBy(num));
-         set2.add(o2.dividedBy(num));
-         num = num.add(new MegaNumber(1));
+      MegaNumber t1 = new MegaNumber(this.getNumber());
+      MegaNumber t2 = new MegaNumber(o2.getNumber());
+      MegaNumber n;
+      
+      if(t1.compareTo(new MegaNumber(0)) == 0
+            && t2.compareTo(new MegaNumber(0)) == 0){
+         return new MegaNumber(0);
       }
       
-      for(MegaNumber n1 : set1){
-        for(MegaNumber n2 : set2){
-            if(n1.compareTo(n2) == 0){
-               if(n1.compareTo(gcd) > 0){
-                  gcd = n1;
-               }
-            }
-         }
+      if(t1.compareTo(new MegaNumber(0)) == 0){
+         return t2; //stop
       }
+      if(t2.compareTo(new MegaNumber(0)) == 0){
+         return t1; //stop
+      }
+      
+      n = t1.dividedBy(t2);
+      return t2.gcd(n.getRemainder());
 
-      return gcd;
    }
 
    public ArrayList<Integer> getNumber(){
@@ -428,7 +425,4 @@ public class MegaNumber implements Comparable<MegaNumber>{
       }
       return out;
    }
-
-
 }
-

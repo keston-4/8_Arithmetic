@@ -321,7 +321,13 @@ public class MegaNumber implements Comparable<MegaNumber>{
       MegaNumber res = new MegaNumber(n2);
       MegaNumber out;
       boolean negn1 = false, negn2 = false;
-      
+      // divisor is 0 (x / 0)
+      if(t2.compareTo(new MegaNumber(0)) == 0){
+         out = new MegaNumber(0);
+         out.setRemainder(new MegaNumber(0));
+         return out;
+      }
+
       if(n1.get(0) < 0){
          n1.set(0, Math.abs(n1.get(0)));
          t1.setNumber(n1);     

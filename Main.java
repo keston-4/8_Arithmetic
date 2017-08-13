@@ -5,7 +5,8 @@
 
 import java.util.Scanner;
 import java.util.ArrayList;
-
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 
 public class Main {
@@ -23,7 +24,8 @@ public class Main {
          }
          System.out.println(ret);
          input = ret.split(" ");
-         if(input.length != 3 || !checkOperation(input[1])){
+         if(input.length != 3 || !checkOperation(input[1])
+                  || !isNumber(input[0],input[2])){
             System.out.println("# Syntax error\n");
             continue;
          } 
@@ -33,6 +35,38 @@ public class Main {
          operate(n1,n2,input[1]);
       }
 
+   }
+
+   public static boolean isNumber(String n1, String n2){
+      String s;
+      int j = 0;
+      
+      if(n1.charAt(0) == '-'){
+         j=1;
+      }
+      
+      for(int i=j;i<n1.length();i++){
+         try {
+            s = ""+n1.charAt(i);
+            Integer.parseInt(s);
+         } catch (NumberFormatException e){
+            return false;
+         }
+      }
+      j=0;
+      if(n2.charAt(0) == '-'){
+         j=1;
+      }
+      
+      for(int i=j;i<n2.length();i++){
+         try {
+            s = ""+n2.charAt(i);
+            Integer.parseInt(s);
+         } catch (NumberFormatException e){
+            return false;
+         }
+      }
+      return true;
    }
 
    public static MegaNumber operate(MegaNumber n1, 
